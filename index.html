@@ -579,9 +579,31 @@
         updateBtns();
     })();
     </script>
-
+    <script>
+      (function () {
+        function sendClick(a) {
+          const phone =
+            (a.href.match(/wa\.me\/(\d+)/) || a.href.match(/phone=(\d+)/) || [])[1] || '';
+          gtag('event', 'click_whatsapp', {
+            event_category: 'engagement',
+            link_text: a.textContent.trim().slice(0, 80),
+            link_url: a.href,
+            phone: phone,
+            page_section: a.closest('section')?.className || 'desconocido',
+            transport_type: 'beacon'
+          });
+        }
+      
+        const sel = 'a[href*="wa.me"], a[href*="api.whatsapp.com/send"]';
+        document.querySelectorAll(sel).forEach(a => {
+          a.addEventListener('click', () => sendClick(a));
+          a.addEventListener('auxclick', (e) => { if (e.button === 1) sendClick(a); });
+        });
+      })();
+    </script>
 
 </body>
 </html>
+
 
 
