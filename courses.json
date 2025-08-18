@@ -1,6 +1,272 @@
 [
-  { "category": "EGCC", "title": "Cálculo I", "status": "1ra práctica" },
-  { "category": "EGCC", "title": "Álgebra Lineal", "status": "1ra práctica" },
-  { "category": "FACI", "title": "Investigación de Operaciones", "status": "1ra práctica" },
-  { "category": "OTROS", "title": "Física I", "status": "1ra práctica" }
+  {
+    "category": "EGCC",
+    "title": "CÁLCULO VECTORIAL",
+    "status": "Ex1"
+  },
+  {
+    "category": "EGCC",
+    "title": "CÁLCULO VECTORIAL",
+    "status": "PC1"
+  },
+  {
+    "category": "EGCC",
+    "title": "ESTADÍSTICA",
+    "status": "PC1"
+  },
+  {
+    "category": "EGCC",
+    "title": "ESTUDIO DEL TRABAJO",
+    "status": "Ex1"
+  },
+  {
+    "category": "EGCC",
+    "title": "ESTUDIO DEL TRABAJO",
+    "status": "Parte 1"
+  },
+  {
+    "category": "EGCC",
+    "title": "FÍSICA 3",
+    "status": "Ex1"
+  },
+  {
+    "category": "EGCC",
+    "title": "FÍSICA 3",
+    "status": "PC1"
+  },
+  {
+    "category": "EGCC",
+    "title": "MECÁNICA PARA INGENIEROS",
+    "status": "Ex1"
+  },
+  {
+    "category": "EGCC",
+    "title": "MECÁNICA PARA INGENIEROS",
+    "status": "Semana 01"
+  },
+  {
+    "category": "EGCC",
+    "title": "SEGURIDAD Y ERGONOMÍA",
+    "status": "Parte 1"
+  },
+  {
+    "category": "FACI",
+    "title": "ANALYTICS 1",
+    "status": "Ex1"
+  },
+  {
+    "category": "FACI",
+    "title": "ANALYTICS 1",
+    "status": "PC1"
+  },
+  {
+    "category": "FACI",
+    "title": "ANALYTICS 2",
+    "status": "Ex1"
+  },
+  {
+    "category": "FACI",
+    "title": "ANALYTICS 2",
+    "status": "Lab01"
+  },
+  {
+    "category": "FACI",
+    "title": "ANÁLISIS CUANTITATIVO PARA LA TOMA DE DECISIONES",
+    "status": "Ex1"
+  },
+  {
+    "category": "FACI",
+    "title": "CONTROL DE GESTIÓN INDUSTRIAL",
+    "status": "Ex1"
+  },
+  {
+    "category": "FACI",
+    "title": "CONTROL ESTADÍSTICO DE CALIDAD",
+    "status": "Ex1"
+  },
+  {
+    "category": "FACI",
+    "title": "DIBUJO MECÁNICO",
+    "status": "Ex1"
+  },
+  {
+    "category": "FACI",
+    "title": "DINÁMICA DE LA CADENA DE SUMINISTRO ESBELTA",
+    "status": "Ex1"
+  },
+  {
+    "category": "FACI",
+    "title": "DISEÑO DE LA CADENA DE SUMINISTROS Y OPERACIONES",
+    "status": "Ex1"
+  },
+  {
+    "category": "FACI",
+    "title": "ECONOMÍA GENERAL",
+    "status": "Ex1"
+  },
+  {
+    "category": "FACI",
+    "title": "ELABORACIÓN Y EVALUACIÓN DE PROYECTOS",
+    "status": "Ex1"
+  },
+  {
+    "category": "FACI",
+    "title": "ELECTRICIDAD INDUSTRIAL",
+    "status": "Ex1"
+  },
+  {
+    "category": "FACI",
+    "title": "ELECTRICIDAD INDUSTRIAL",
+    "status": "PC1"
+  },
+  {
+    "category": "FACI",
+    "title": "FINANZAS INDUSTRIALES",
+    "status": "Ex1"
+  },
+  {
+    "category": "FACI",
+    "title": "FINANZAS INDUSTRIALES",
+    "status": "PC1"
+  },
+  {
+    "category": "FACI",
+    "title": "FUNDAMENTOS DE LA CADENA DE SUMINISTROS Y OPERACIONES",
+    "status": "Ex1"
+  },
+  {
+    "category": "FACI",
+    "title": "FUNDAMENTOS DE LA CADENA DE SUMINISTROS Y OPERACIONES",
+    "status": "Lab01"
+  },
+  {
+    "category": "FACI",
+    "title": "GESTIÓN AMBIENTAL",
+    "status": "Ex1"
+  },
+  {
+    "category": "FACI",
+    "title": "GESTIÓN AMBIENTAL",
+    "status": "PC1"
+  },
+  {
+    "category": "FACI",
+    "title": "GESTIÓN DEL TALENTO HUMANO",
+    "status": "Ex1"
+  },
+  {
+    "category": "FACI",
+    "title": "GESTIÓN DEL TALENTO HUMANO",
+    "status": "TA1"
+  },
+  {
+    "category": "FACI",
+    "title": "GESTIÓN EMPRESARIAL",
+    "status": "Ex1"
+  },
+  {
+    "category": "FACI",
+    "title": "GESTIÓN EMPRESARIAL",
+    "status": "PC1"
+  },
+  {
+    "category": "FACI",
+    "title": "HABILIDADES DIRECTIVAS",
+    "status": "Ex1"
+  },
+  {
+    "category": "FACI",
+    "title": "INGENIERÍA DE MATERIALES",
+    "status": "Ex1"
+  },
+  {
+    "category": "FACI",
+    "title": "INGENIERÍA DE MATERIALES",
+    "status": "Lab01"
+  },
+  {
+    "category": "FACI",
+    "title": "INGENIERÍA ECONÓMICA",
+    "status": "Ex1"
+  },
+  {
+    "category": "FACI",
+    "title": "INGENIERÍA ECONÓMICA",
+    "status": "PC1"
+  },
+  {
+    "category": "FACI",
+    "title": "INTRODUCCIÓN A LA PROGRAMACIÓN",
+    "status": "Ex1"
+  },
+  {
+    "category": "FACI",
+    "title": "INTRODUCCIÓN A LA PROGRAMACIÓN",
+    "status": "Lab01"
+  },
+  {
+    "category": "FACI",
+    "title": "INTRODUCCIÓN A LA TERMODINÁMICA",
+    "status": "Ex1"
+  },
+  {
+    "category": "FACI",
+    "title": "INTRODUCCIÓN A LA TERMODINÁMICA",
+    "status": "PC1"
+  },
+  {
+    "category": "FACI",
+    "title": "MERCADOTECNIA INDUSTRIAL",
+    "status": "Ex1"
+  },
+  {
+    "category": "FACI",
+    "title": "MERCADOTECNIA INDUSTRIAL",
+    "status": "PC1"
+  },
+  {
+    "category": "FACI",
+    "title": "MODELOS DETERMINÍSTICOS",
+    "status": "Ex1"
+  },
+  {
+    "category": "FACI",
+    "title": "MODELOS DETERMINÍSTICOS",
+    "status": "Lab01"
+  },
+  {
+    "category": "FACI",
+    "title": "PROCESOS DE MANUFACTURA",
+    "status": "Parte 1"
+  },
+  {
+    "category": "FACI",
+    "title": "PROCESOS INDUSTRIALES",
+    "status": "Ex1"
+  },
+  {
+    "category": "FACI",
+    "title": "PROCESOS INDUSTRIALES",
+    "status": "Parte 1"
+  },
+  {
+    "category": "FACI",
+    "title": "RESISTENCIA DE MATERIALES 1A",
+    "status": "Ex1"
+  },
+  {
+    "category": "FACI",
+    "title": "RESISTENCIA DE MATERIALES 1A",
+    "status": "PC1"
+  },
+  {
+    "category": "FACI",
+    "title": "SIMULACIÓN",
+    "status": "Ex1"
+  },
+  {
+    "category": "FACI",
+    "title": "SIMULACIÓN",
+    "status": "Parte 1"
+  }
 ]
