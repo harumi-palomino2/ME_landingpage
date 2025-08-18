@@ -424,113 +424,171 @@
     })();
   </script>
 
-  <!-- Carga de cursos desde courses.json + métrica GA para WhatsApp -->
-  <script>
-    // Generador del HTML de un curso
-    function courseCard(course){
-      const danger = /1ra|2da|examen|urgente|hoy/i.test(course.status || '');
-      const badge  = danger ? 'badge badge--danger' : 'badge';
-      const waBase = 'https://wa.me/51966401563?text=';
-      const msg    = `Hola Made Easy, quiero ${course.title}`;
-      const waUrl  = waBase + encodeURIComponent(msg);
+  <!-- Carga agrupada de cursos desde courses.json -->
+<script>
+(async function () {
+  // 1) Traer JSON (sin caché)
+  const res = await fetch('./courses.json?v=' + Date.now(), { cache: 'no-store' });
+  const rows = await res.json();
 
-      return `
-        <div class="curso">
-          <div class="curso__info">
-            <span class="curso__title">${course.title}</span>
-            <span class="curso__disp">Disponible: <em class="${badge}">${course.status || 'consultar'}</em></span>
-          </div>
-          <a class="curso__btn" href="${waUrl}" target="_blank" rel="noopener"
-             data-course-title="${course.title}"
-             data-course-category="${(course.category||'OTROS').toUpperCase()}"
-             data-button="catalogo">
-            <img src="asset/iconos/mensajes.png" alt="" />
-            <span>Solicitar</span>
-          </a>
-        </div>`;
+  // 2) Utilidades para mostrar y ordenar badges
+  const pretty = (s) => {
+    if (/^PC1$/i.test(s)) return '1ra práctica';
+    if (/^EX1$/i.test(s)) return 'Examen 1';
+    if (/^LAB0?1$/i.test(s)) return 'Lab 1';
+    if (/^PARTE\s*1$/i.test(s)) return 'Parte 1';
+    if (/^TA1$/i.test(s)) return 'TA 1';
+    if (/^SEMANA\s*0?1$/i.test(s)) return 'Semana 01';
+    return s;
+  };
+  const statusOrder = (s) => {
+    s = (s || '').toUpperCase().trim();
+    if (s === 'EX1') return 10;
+    if (s === 'PC1') return 20;
+    if (/^LAB0?1$/.test(s)) return 30;
+    if (/^PARTE\s*1$/.test(s)) return 40;
+    if (s === 'TA1') return 50;
+    if (/^SEMANA\s*0?1$/.test(s)) return 60;
+    return 999;
+  };
+
+  // 3) Agrupar por category+title y juntar statuses sin duplicados
+  const map = new Map();
+  for (const r of rows) {
+    const key = `${(r.category || '').toUpperCase()}||${(r.title || '').toUpperCase()}`;
+    if (!map.has(key)) {
+      map.set(key, { category: r.category, title: r.title, statuses: [], _seen: new Set() });
     }
+    const item = map.get(key);
+    const norm = (r.status || '').trim().toUpperCase();
+    if (!item._seen.has(norm)) {
+      item._seen.add(norm);
+      item.statuses.push(r.status);
+    }
+  }
+  const grouped = Array.from(map.values())
+    .map(({ _seen, ...rest }) => {
+      rest.statuses.sort((a, b) => statusOrder(a) - statusOrder(b));
+      return rest;
+    })
+    .sort((a, b) => (a.category || '').localeCompare(b.category || '') ||
+                   (a.title || '').localeCompare(b.title || ''));
 
-    // Carga y render
-    (async function loadCourses(){
-      try{
-        const res  = await fetch('courses.json', { cache:'no-cache' });
-        const rows = await res.json();
+  // 4) Targets por categoría
+  const egccBody  = document.getElementById('egcc-body');
+  const faciBody  = document.getElementById('faci-body');
+  const otrosBody = document.getElementById('otros-body');
+  [egccBody, faciBody, otrosBody].forEach(el => el && (el.innerHTML = ''));
 
-        const containers = {
-          'EGCC':  document.getElementById('egcc-body'),
-          'FACI':  document.getElementById('faci-body'),
-          'OTROS': document.getElementById('otros-body')
-        };
-        Object.values(containers).forEach(c => c && (c.innerHTML = ''));
+  // 5) Render de tarjeta con múltiples badges
+  const phone = '51966401563';
+  function renderCourse(item, parent) {
+    const wrap = document.createElement('div');
+    wrap.innerHTML = `
+      <div class="curso">
+        <div class="curso__info">
+          <span class="curso__title">${item.title}</span>
+          <span class="curso__disp">
+            Disponible: <span class="badges"></span>
+          </span>
+        </div>
+        <a class="curso__btn"
+           href="https://wa.me/${phone}?text=${encodeURIComponent('Hola Made Easy, quiero solicitar ' + item.title)}"
+           target="_blank" rel="noopener"
+           data-course-title="${item.title}"
+           data-course-category="${(item.category || 'OTROS').toUpperCase()}"
+           data-button="catalogo">
+          <img src="asset/iconos/mensajes.png" alt="" />
+          <span>Solicitar</span>
+        </a>
+      </div>`;
+    const node   = wrap.firstElementChild;
+    const badges = node.querySelector('.badges');
 
-        rows.forEach(c => {
-          const box = containers[(c.category||'OTROS').toUpperCase()] || containers['OTROS'];
-          if (box) box.insertAdjacentHTML('beforeend', courseCard(c));
-        });
+    for (const st of item.statuses) {
+      const raw = (st || '').trim();
+      const up  = raw.toUpperCase();
+      const isDanger = /^(PC1|EX1)$/.test(up) || /1RA/i.test(raw);
+      const em  = document.createElement('em');
+      em.className = isDanger ? 'badge badge--danger' : 'badge';
+      em.textContent = pretty(raw);
+      badges.appendChild(em);
+    }
+    parent.appendChild(node);
+  }
 
-        Object.values(containers).forEach(el => {
-          if (el && !el.children.length) el.insertAdjacentHTML('beforeend', `<p class="hint">Sin cursos disponibles.</p>`);
-        });
-      }catch(e){
-        console.error('Error cargando courses.json', e);
-      }
-    })();
+  // 6) Pintar según categoría
+  for (const it of grouped) {
+    const cat = (it.category || 'OTROS').toUpperCase();
+    if (cat === 'FACI') renderCourse(it, faciBody);
+    else if (cat === 'EGCC') renderCourse(it, egccBody);
+    else renderCourse(it, otrosBody || egccBody);
+  }
 
-    // GA4: delegación + anti-doble click para todos los enlaces de WhatsApp
-    (function () {
-      const SEL = 'a[href*="wa.me"], a[href*="api.whatsapp.com/send"]';
-      const recent = new WeakMap();
-      const now = () => Date.now();
-      const shouldCount = (a) => {
-        const t = now(), last = recent.get(a) || 0;
-        if (t - last < 1200) return false;
-        recent.set(a, t);
-        return true;
-      };
+  // 7) Mensaje si no hay cursos
+  [egccBody, faciBody, otrosBody].forEach(el => {
+    if (el && !el.children.length) el.insertAdjacentHTML('beforeend', '<p class="hint">Sin cursos disponibles.</p>');
+  });
+})();
+</script>
 
-      function sendClick(a) {
-        if (!shouldCount(a)) return;
+<!-- GA4: tracking de clics en WhatsApp con anti-doble click -->
+<script>
+(function () {
+  const SEL = 'a[href*="wa.me"], a[href*="api.whatsapp.com/send"]';
+  const recent = new WeakMap();
+  const now = () => Date.now();
+  const shouldCount = (a) => {
+    const t = now(), last = recent.get(a) || 0;
+    if (t - last < 1200) return false;
+    recent.set(a, t);
+    return true;
+  };
 
-        const phone =
-          (a.href.match(/wa\.me\/(\d+)/) || a.href.match(/phone=(\d+)/) || [])[1] || '';
-        const courseTitle   = a.dataset.courseTitle || a.textContent.trim();
-        const courseCategory= a.dataset.courseCategory || (a.closest('details')?.querySelector('.acc__head strong')?.textContent || 'desconocido');
-        const buttonVariant = a.dataset.button || 'desconocido';
-        const pageSection   = a.closest('section')?.className || 'desconocido';
+  function sendClick(a) {
+    if (!shouldCount(a)) return;
 
-        if (typeof gtag === 'function') {
-          let called = false;
-          const done = () => { called = true; };
-          setTimeout(() => { if (!called) called = true; }, 300);
+    const phone =
+      (a.href.match(/wa\.me\/(\d+)/) || a.href.match(/phone=(\d+)/) || [])[1] || '';
+    const courseTitle    = a.dataset.courseTitle || a.textContent.trim();
+    const courseCategory = a.dataset.courseCategory ||
+      (a.closest('details')?.querySelector('.acc__head strong')?.textContent || 'desconocido');
+    const buttonVariant  = a.dataset.button || 'desconocido';
+    const pageSection    = a.closest('section')?.className || 'desconocido';
 
-          gtag('event', 'click_whatsapp', {
-            event_category: 'engagement',
-            link_text: a.textContent.trim().slice(0, 80),
-            link_url: a.href,
-            phone,
-            course_title: courseTitle,
-            course_category: courseCategory,
-            button_variant: buttonVariant,
-            page_section: pageSection,
-            transport_type: 'beacon',
-            event_callback: done
-          });
-        }
-      }
+    if (typeof gtag === 'function') {
+      let doneCalled = false;
+      const done = () => { doneCalled = true; };
+      setTimeout(() => { if (!doneCalled) doneCalled = true; }, 300);
 
-      function findWA(target){
-        return target && target.closest && target.closest(SEL);
-      }
-      document.body.addEventListener('click', (e) => {
-        const a = findWA(e.target);
-        if (a) sendClick(a);
+      gtag('event', 'click_whatsapp', {
+        event_category: 'engagement',
+        link_text: a.textContent.trim().slice(0, 80),
+        link_url: a.href,
+        phone,
+        course_title: courseTitle,
+        course_category: courseCategory,
+        button_variant: buttonVariant,
+        page_section: pageSection,
+        transport_type: 'beacon',
+        event_callback: done
       });
-      document.body.addEventListener('auxclick', (e) => {
-        if (e.button !== 1) return;
-        const a = findWA(e.target);
-        if (a) sendClick(a);
-      });
-    })();
-  </script>
+    }
+  }
+
+  function findWA(target){ return target && target.closest && target.closest(SEL); }
+  document.body.addEventListener('click', (e) => {
+    const a = findWA(e.target);
+    if (a) sendClick(a);
+  });
+  document.body.addEventListener('auxclick', (e) => {
+    if (e.button !== 1) return;
+    const a = findWA(e.target);
+    if (a) sendClick(a);
+  });
+})();
+</script>
+
 </body>
 </html>
+
