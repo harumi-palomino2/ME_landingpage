@@ -1,0 +1,6 @@
+[
+  { "category": "EGCC", "title": "Cálculo I", "status": "1ra práctica" },
+  { "category": "EGCC", "title": "Álgebra Lineal", "status": "1ra práctica" },
+  { "category": "FACI", "title": "Investigación de Operaciones", "status": "1ra práctica" },
+  { "category": "OTROS", "title": "Física I", "status": "1ra práctica" }
+]
